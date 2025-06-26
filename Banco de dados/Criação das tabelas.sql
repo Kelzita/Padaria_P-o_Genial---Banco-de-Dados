@@ -97,12 +97,15 @@ CREATE TABLE estoque (
 /*Tabela Comanda*/
 CREATE TABLE comanda (
    id_comanda int not null AUTO_INCREMENT,
+   id_funcionario int not null,  
    data_abertura date,
    hora_abetura time,
    status varchar(10),
    qtd int,
    
-   PRIMARY KEY(id_comanda)
+   PRIMARY KEY(id_comanda), 
+   FOREIGN KEY(id_funcionario) REFERENCES      funcionarios(id_funcionario);
+
 );
 
 /*Tabela Venda*/
@@ -160,3 +163,14 @@ CREATE TABLE movimentoestoque (
    FOREIGN KEY(id_funcionario) REFERENCES funcionarios(id_funcionario)
 );
     
+
+CREATE TABLE item_comanda (
+   id_item_comanda INT NOT NULL AUTO_INCREMENT,
+   id_comanda INT NOT NULL,
+   id_produto INT NOT NULL,
+   qtd INT,
+   observacao VARCHAR(100),
+   PRIMARY KEY(id_item_comanda),
+   FOREIGN KEY(id_comanda) REFERENCES comanda(id_comanda),
+   FOREIGN KEY(id_produto) REFERENCES produto(id_produto)
+);
