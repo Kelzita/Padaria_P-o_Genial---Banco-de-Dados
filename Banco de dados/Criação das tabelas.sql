@@ -2,22 +2,31 @@
 CREATE DATABASE Padaria_Pao_Genial;
 USE Padaria_Pao_Genial;
 
-/*Tabeça Função*/
+/*Tabela Função*/
 CREATE TABLE funcao (
    id_funcao int not null,
    nome_funcao varchar(50),
    PRIMARY KEY(id_funcao)
 
 );
+/*Tabela Usuário */
+CREATE TABLE usuario (
+    id_usuario int not null AUTO_INCREMENT,
+    nome_usuario varchar(50),
+    senha varchar(20),
+
+    PRIMARY KEY (id_usuario)
+);
 
 /*Tabela Funcionários*/
 CREATE TABLE funcionarios (
     id_funcionario INT not null AUTO_INCREMENT,
-    id_funcao int,
+    id_funcao int not null,
+    id_usuario int not null,
     nome_funcionario varchar(80),
-    senha int not null,
     CPF varchar(20),
     email varchar(80),
+    CEP varchar(15),
     rua varchar(30),
     telefone varchar(20),
     numero int,
@@ -28,6 +37,7 @@ CREATE TABLE funcionarios (
     salario decimal(10,2),
     PRIMARY KEY(id_funcionario),
     FOREIGN KEY (id_funcao) REFERENCES funcao(id_funcao)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );    
 
 /*Tabela Fornecedores*/
@@ -35,13 +45,15 @@ CREATE TABLE fornecedores (
     id_fornecedor int not null AUTO_INCREMENT,
     nome_fornecedor varchar(80),
     CNPJ varchar(15),
-    email varchar(80),
     telefone varchar(20),
+    email varchar(80),
+    CEP varchar(15),
     rua varchar(30),
     numero int,
     bairro varchar(80),
     cidade varchar(20),
     UF char(2),
+    
     
     PRIMARY KEY(id_fornecedor)
 );
@@ -49,15 +61,15 @@ CREATE TABLE fornecedores (
 /*Tabela Produto*/
 CREATE TABLE produto (
     id_produto int not null AUTO_INCREMENT,
+    id_estoque int not null,
     id_fornecedor int not null,
     nome_produto varchar(80),
-    descricao varchar(200),
-    precoun decimal(10,2),
-    unmedida char(10),
+    preco decimal(10,2),
+    un_medida char(10),
     validade date,
-    
     PRIMARY KEY(id_produto),
     FOREIGN KEY(id_fornecedor) REFERENCES fornecedores(id_fornecedor)
+    FOREIGN KEY(id_estoque) REFERENCES estoque(id_estoque)
 );
 
 /*Tabela Caixa*/
@@ -87,13 +99,14 @@ CREATE TABLE forma_pagamento (
 /*Tabela Estoque*/
 CREATE TABLE estoque ( 
     id_estoque int not null AUTO_INCREMENT,
+    id_produto int not null,
     qtd_atual int,
     qtd_min int,
     qtd_max int,
     
     PRIMARY KEY(id_estoque)
+    FOREIGN KEY(id_produto) REFERENCES produto(id_produto)
 );
-
 /*Tabela Comanda*/
 CREATE TABLE comanda (
    id_comanda int not null AUTO_INCREMENT,
@@ -123,7 +136,7 @@ CREATE TABLE venda (
 
 );
 
-/*Tabela ItemVenda*/
+/*Tabela ItemVenda* - POSSIVELMENTE MUDAR PARA ITEM_COMANDA*/
 CREATE TABLE itemvenda (
    id_item int not null AUTO_INCREMENT,
    id_produto int not null,
@@ -137,33 +150,6 @@ CREATE TABLE itemvenda (
 
 );
 
-/*Tabela Movimento Caixa*/
-CREATE TABLE movimentocaixa (
-   id_movimentocaixa int not null AUTO_INCREMENT,
-   id_caixa int not null,
-   valor decimal(10,2),
-   data_hora datetime,
-   observacao varchar(100),
-   
-   PRIMARY KEY(id_movimentocaixa),
-   FOREIGN KEY(id_caixa) REFERENCES caixa(id_caixa)
-);
-
-/*Tabela Movimento estoque*/
-CREATE TABLE movimentoestoque (
-   id_movimentoestoque int not null AUTO_INCREMENT,
-   id_produto int not null,
-   id_funcionario int not null,
-   observacao varchar(100),
-   data_hora datetime,
-   qtd int,
-   
-   PRIMARY KEY(id_movimentoestoque),
-   FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
-   FOREIGN KEY(id_funcionario) REFERENCES funcionarios(id_funcionario)
-);
-    
-
 CREATE TABLE item_comanda (
    id_item_comanda INT NOT NULL AUTO_INCREMENT,
    id_comanda INT NOT NULL,
@@ -174,3 +160,30 @@ CREATE TABLE item_comanda (
    FOREIGN KEY(id_comanda) REFERENCES comanda(id_comanda),
    FOREIGN KEY(id_produto) REFERENCES produto(id_produto)
 );
+
+/*Tabela Movimento Caixa*/
+/*CREATE TABLE movimentocaixa (
+   id_movimentocaixa int not null AUTO_INCREMENT,
+   id_caixa int not null,
+   valor decimal(10,2),
+   data_hora datetime,
+   observacao varchar(100),
+   
+   PRIMARY KEY(id_movimentocaixa),
+   FOREIGN KEY(id_caixa) REFERENCES caixa(id_caixa)
+);*/
+
+/*Tabela Movimento estoque*/
+/*CREATE TABLE movimentoestoque (
+   id_movimentoestoque int not null AUTO_INCREMENT,
+   id_produto int not null,
+   id_funcionario int not null,
+   observacao varchar(100),
+   data_hora datetime,
+   qtd int,
+   
+   PRIMARY KEY(id_movimentoestoque),
+   FOREIGN KEY(id_produto) REFERENCES produto(id_produto),
+   FOREIGN KEY(id_funcionario) REFERENCES funcionarios(id_funcionario)
+);*/
+    
